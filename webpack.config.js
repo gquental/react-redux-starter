@@ -23,7 +23,11 @@ module.exports = {
       {
         test: /\.css$/,
         exclude: /node_modules/,
-        loader: extractCSS.extract("css-loader")
+        loader: extractCSS.extract(["css-loader"])
+      },
+      {
+        test: /(svg|ttf|eot|woff)/,
+        use: "file-loader"
       }
     ]
   },
