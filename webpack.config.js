@@ -11,23 +11,39 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].js'
   },
+  resolve: {
+    extensions: ['.js', '.jsx'],
+  },
   module: {
     rules: [
       {
         test: /(js|jsx)/,
-        loader: "babel-loader",
+        loader: 'babel-loader',
         options: {
-          presets: ["es2015", "react", "stage-2"]
+          presets: ['es2015', 'react', 'stage-2']
         }
       },
       {
         test: /\.css$/,
-        exclude: /node_modules/,
-        loader: extractCSS.extract(["css-loader"])
+        loader: extractCSS.extract([
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true
+            }
+          }
+        ]),
+        include: /node_modules/
       },
       {
-        test: /(svg|ttf|eot|woff)/,
-        use: "file-loader"
+        test: /\.(png|jpg|gif|woff|woff2|eot|ttf)$/,
+        loader: 'url-loader?limit=8192',
+        include: /node_modules/
+      },
+      {
+        test: /\.(mp4|ogg|svg)$/,
+        loader: 'file-loader',
+        include: /node_modules/
       }
     ]
   },
