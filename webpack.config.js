@@ -2,17 +2,61 @@ var path = require('path');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 var extractCSS = new ExtractTextPlugin({ filename: 'bundle.css', disable: false, allChunks: true });
+var webpack = require('webpack');
+
+var plugins = [
+  extractCSS,
+  new webpack.DefinePlugin({
+    'process.env': {
+      'NODE_ENV': JSON.stringify('production')
+    }
+  })
+];
+
+var entry = {
+  main: [
+    'webpack-dev-server/client?http://localhost:8080',
+    'webpack/hot/only-dev-server',
+    './src/index.jsx'
+  ]
+}
+
+if (process.env.NODE_ENV == "production") {
+  plugins.push(
+    new webpack.optimize.UglifyJsPlugin({
+      compress:{
+        warnings: true
+      }
+    })
+  );
+
+  entry.main = './src/index.jsx'
+} else {
+  plugins.push(
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NamedModulesPlugin()
+  )
+}
+
 
 module.exports = {
-  entry: {
-    main: './src/index.jsx'
-  },
+  entry: entry,
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].js'
   },
   resolve: {
     extensions: ['.js', '.jsx'],
+  },
+  devServer: {
+    hot: true,
+    // activate hot reloading
+
+    contentBase: path.resolve(__dirname, 'dist'),
+    // match the output path
+
+    publicPath: '/'
+    // match the output `publicPath`
   },
   module: {
     rules: [
@@ -47,7 +91,5 @@ module.exports = {
       }
     ]
   },
-  plugins: [
-    extractCSS
-  ]
+  plugins: plugins
 }
