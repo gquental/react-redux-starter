@@ -77,17 +77,17 @@ module.exports = {
             }
           }
         ]),
-        include: /node_modules/
+        include: /(src|node_modules)/
       },
       {
         test: /\.(png|jpg|gif|woff|woff2|eot|ttf)$/,
         loader: 'url-loader?limit=8192',
-        include: /node_modules/
+        include: /(src|node_modules)/
       },
       {
         test: /\.(mp4|ogg|svg)$/,
         loader: 'file-loader',
-        include: /node_modules/
+        include: /(src|node_modules)/
       }
     ]
   },
